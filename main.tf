@@ -1,4 +1,4 @@
-resource "aws_instance" "server" {
+resource "aws_instance" "ser" {
     ami           = "ami-0d398eb3480cb04e7"
     instance_type = var.instance_size
     monitoring = false
