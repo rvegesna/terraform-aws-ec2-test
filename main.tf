@@ -1,33 +1,18 @@
-provider "aws" {
-  region = "us-west-2"
-}
+resource "aws_instance" "server" {
+    ami           = "ami-0d398eb3480cb04e7"
+    instance_type = var.instance_size
+    monitoring = false
+    vpc_security_group_ids = var.security_group_ids
+    subnet_id = var.subnet_id          
 
-resource "aws_vpc" "prod" {
-  cidr_block = "10.0.0.0/16"
-}
+    root_block_device {
+        delete_on_termination = false
+        encrypted = true
+        volume_size = 20
+        volume_type = "standard"
+    }
 
-resource "aws_subnet" "sub1" {
-  vpc_id     = aws_vpc.prod.id
-  cidr_block = "10.0.1.0/24"
-  availability_zone = "us-west-2a"
-
-  tags = {
-    Name = "subnet"
-  }
-}
-
-module "webserver" {
-    source = "./modules/ec2"
-
-    servername = "test"
-    instance_size = "t2.micro"
-    subnet_id = aws_subnet.sub1.id
-    security_group_ids = [aws_vpc.prod.default_security_group_id]
-
-}
-
-resource "aws_ec2_tag" "tags" {
-  resource_id = module.webserver.id
-  key         = "Environment"
-  value       = "Production"
+    tags = {
+        Name = var.servername
+    }
 }
