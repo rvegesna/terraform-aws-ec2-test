@@ -1,4 +1,4 @@
 output "id" {
     description = "id of EC2"
-    value = aws_instance.server.id
+    value = aws_instance.ser.id
 }
